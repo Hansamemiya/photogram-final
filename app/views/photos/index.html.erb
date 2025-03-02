@@ -1,0 +1,12 @@
+<h1>All Photos</h1>
+
+<% @photos.each do |photo| %>
+  <div>
+    <h2><%= photo.caption %></h2>
+    <% if photo.image.attached? %>
+      <%= image_tag photo.image, style: "max-width: 300px; height: auto;" %>
+    <% end %>
+    <p>Likes: <%= photo.likes_count %> | Comments: <%= photo.comments_count %></p>
+  </div>
+  <hr>
+<% end %>

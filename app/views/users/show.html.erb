@@ -1,0 +1,10 @@
+<h2>Pending Follow Requests</h2>
+<ul>
+  <% @pending_follow_requests.each do |request| %>
+    <li>
+      <%= request.sender.username %>
+      <%= link_to "Accept", accept_follow_request_path(request), method: :patch %>
+      <%= link_to "Reject", reject_follow_request_path(request), method: :patch %>
+    </li>
+  <% end %>
+</ul>
