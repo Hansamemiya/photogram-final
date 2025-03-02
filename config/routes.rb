@@ -15,5 +15,5 @@ Rails.application.routes.draw do
   get "/discovery", to: "photos#discovery"
 
 
-  root "photos#index"
+  root "users#index"
 end
