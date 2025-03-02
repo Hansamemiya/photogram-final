@@ -1,31 +1,20 @@
 class UsersController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:index]
-
   def index
-    @users = User.all
+    matching_users = User.all
+
+    @list_of_users = matching_users.order({ :username => :asc})
+    render "users/index"
   end
 
   def show
-    @user = User.find(params[:id])
-    @pending_follow_requests = @user.received_follow_requests.where(status: "pending")
-  end
+    the_username = params.fetch("path_id")
   
-  def edit
-    @user = current_user
-  end
+    @the_user = User.where({ :username => the_username}).at(0)
+  
+    user_photos = @the_user.photos
+  
+    @list_of_photos = user_photos.order({ :created_at => :desc })
 
-  def update
-    @user = current_user
-    if @user.update(user_params)
-      redirect_to root_path, notice: "Profile updated successfully."
-    else
-      render :edit
-    end
-  end
-
-  private
-
-  def user_params
-    params.require(:user).permit(:username, :email, :password, :password_confirmation)
+    render "users/show"
   end
 end

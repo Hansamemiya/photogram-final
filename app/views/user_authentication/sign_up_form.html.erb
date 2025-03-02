@@ -1,0 +1,32 @@
+<h2>Sign Up</h2>
+
+<%= form_for(@user, url: insert_user_path) do |f| %>
+  <div>
+    <%= f.label :username %><br>
+    <%= f.text_field :username %>
+  </div>
+
+  <div>
+    <%= f.label :email %><br>
+    <%= f.email_field :email %>
+  </div>
+
+  <div>
+    <%= f.label :password %><br>
+    <%= f.password_field :password %>
+  </div>
+
+  <div>
+    <%= f.label :password_confirmation %><br>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <div>
+    <%= f.label :private %>
+    <%= f.check_box :private %>
+  </div>
+
+  <%= f.submit "Sign Up" %>
+<% end %>
+
+<%= link_to "Already have an account? Sign in", user_sign_in_path %>

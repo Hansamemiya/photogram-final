@@ -1,0 +1,32 @@
+<h2>Edit Profile</h2>
+
+<%= form_for(current_user, url: modify_user_path, method: :post) do |f| %>
+  <div>
+    <%= f.label :username %><br>
+    <%= f.text_field :username %>
+  </div>
+
+  <div>
+    <%= f.label :email %><br>
+    <%= f.email_field :email %>
+  </div>
+
+  <div>
+    <%= f.label :password %> (leave blank to keep current password)<br>
+    <%= f.password_field :password %>
+  </div>
+
+  <div>
+    <%= f.label :password_confirmation %><br>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <div>
+    <%= f.label :private %>
+    <%= f.check_box :private %>
+  </div>
+
+  <%= f.submit "Update Profile" %>
+<% end %>
+
+<%= link_to "Cancel my account", cancel_user_account_path, method: :get, data: { confirm: "Are you sure?" } %>

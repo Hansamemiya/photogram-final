@@ -1,5 +1,4 @@
 class PhotosController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:index]
   def feed
     @photos = current_user.feed
   end
