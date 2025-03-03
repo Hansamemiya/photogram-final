@@ -1,0 +1,8 @@
+<h1><%= @the_user.username %>'s Liked Photos</h1>
+
+<% @photos.each do |photo| %>
+  <div>
+    <img src="<%= photo.image.url %>" width="100">
+    <p><%= photo.caption %></p>
+  </div>
+<% end %>

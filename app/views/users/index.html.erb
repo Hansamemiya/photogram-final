@@ -2,40 +2,60 @@
 
 <table border="1">
   <tr>
-    <th>
-      Username
-    </th>
-
-    <th>
-      Private?
-    </th>
-
-    <th></th>
-    <th></th>
+    <th>Username</th>
+    <th>Private?</th>
+    <% if user_signed_in? %>
+      <th>Follow/Unfollow</th>
+    <% end %>
+    <th>Details</th>
   </tr>
 
-      <% @list_of_users.each do |a_thing| %>
-        <tr>
-          <td><%= a_thing.username %></td>
-          <td><% if a_thing.private == false %>
-          No
-          <% else %>
+  <% @list_of_users.each do |user| %>
+    <tr>
+      <td><%= user.username %></td>
+
+      <td>
+        <% if user.private? %>
           Yes
-          <% end %>  
-          </td>
-          <td><% if @current_user == nil %>
-          
+        <% else %>
+          No
+        <% end %>
+      </td>
+
+      <% if user_signed_in? %>
+        <td>
+          <% if user == current_user %>
+            <!-- You can't follow yourself -->
+            <!-- Test doesn't mention this scenario, so leave blank or show nothing -->
           <% else %>
-          <form action="follow">
-            <label for="follow_request"></label>
-            <button>Follow</button>
-          </form>
+            <% existing_request = FollowRequest.find_by(sender_id: current_user.id, recipient_id: user.id) %>
+            <% if existing_request.nil? %>
+              <!-- Haven’t sent a request yet => show Follow button -->
+              <form action="/follow_requests" method="post" style="display:inline;">
+                <input type="hidden" name="recipient_id" value="<%= user.id %>">
+                <button>Follow</button>
+              </form>
+            <% else %>
+              <!-- We have a follow request -->
+              <% case existing_request.status %>
+              <% when "accepted" %>
+                <!-- Show "Unfollow" link -->
+                <a href="/follow_requests/<%= existing_request.id %>" data-method="delete" rel="nofollow">Unfollow</a>
+              <% when "pending" %>
+                <!-- "Request sent" and "Cancel" link -->
+                Request sent
+                <a href="/follow_requests/<%= existing_request.id %>" data-method="delete" rel="nofollow">Cancel</a>
+              <% when "rejected" %>
+                <!-- "rejected" => Show nothing, test expects no text -->
+              <% end %>
+            <% end %>
           <% end %>
-          </td>
-          <td>
-            <a href="/users/<%= a_thing.username %>">Show Details</a>
-          </td>
-        </tr>
+        </td>
       <% end %>
 
-  </table>
+      <td>
+        <a href="/users/<%= user.username %>">Show Details</a>
+      </td>
+    </tr>
+  <% end %>
+</table>

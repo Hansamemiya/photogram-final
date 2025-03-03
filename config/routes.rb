@@ -1,13 +1,16 @@
 Rails.application.routes.draw do
   root to: "users#index"
 
-  # Devise Authentication
-  devise_for :users, controllers: {
-  registrations: "users/registrations"
-}
+  devise_for :users, controllers: { registrations: "users/registrations" }
 
-  # Users Routes
-  resources :users, only: [:index, :show]
+  # Users
+  resources :users, only: [:index, :show], param: :username do
+    member do
+      get :feed
+      get :liked_photos
+      get :discover
+    end
+  end
 
   # Photos
   resources :photos, only: [:index, :show, :create, :update, :destroy]
@@ -15,11 +18,9 @@ Rails.application.routes.draw do
   # Follow Requests
   resources :follow_requests, only: [:index, :create, :update, :destroy]
 
-  resources :comments, only: [:index, :create, :destroy]
-  
+  # Likes
   resources :likes, only: [:index, :create, :destroy]
 
-
-  # This line is redundant if you're already using `resources :users, only: [:show]`
-  # get("/users/:id", { controller: "users", action: "show" }) 
+  # Comments
+  resources :comments, only: [:index, :create, :destroy]
 end
