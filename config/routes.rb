@@ -15,11 +15,10 @@ Rails.application.routes.draw do
   # Follow Requests
   resources :follow_requests, only: [:index, :create, :update, :destroy]
 
-  # Likes
+  resources :comments, only: [:index, :create, :destroy]
+  
   resources :likes, only: [:index, :create, :destroy]
 
-  # Comments
-  resources :comments, only: [:index, :create, :destroy]
 
   # This line is redundant if you're already using `resources :users, only: [:show]`
   # get("/users/:id", { controller: "users", action: "show" }) 

@@ -4,26 +4,27 @@
 
 <hr>
 
-<% if user_signed_in? %>  
-  <div>
-    <h2>Add Photo</h2>
+<% if user_signed_in? %>
+  <h2>Add Photo</h2>
 
-    <!-- Use Rails helpers rather than a bare <form> tag for best practice -->
-    <%= form_with model: Photo.new, url: photos_path, local: true, multipart: true do |form| %>
-      <div>
-        <%= form.label :caption, "Caption" %><br>
-        <%= form.text_area :caption, rows: 3 %>
-      </div>
+  <%= form_with model: Photo.new, url: photos_path, local: true, multipart: true do |form| %>
+    <div>
+      <%= form.label :caption, "Caption" %><br>
+      <%= form.text_area :caption, rows: 3 %>
+    </div>
 
-      <div>
-        <%= form.label :image, "Upload Image" %><br>
-        <%= form.file_field :image %>  <!-- For CarrierWave file upload -->
-      </div>
+    <div>
+      <%= form.label :image, "Image" %><br>
+      <%= form.file_field :image %>
+    </div>
 
-      <%= form.submit "Add photo" %>
-    <% end %>
-  </div>
+    <div>
+      <button type="submit">Add photo</button>  <!-- Explicit button -->
+    </div>
+  <% end %>
 <% end %>
+
+
 
 <hr>
 

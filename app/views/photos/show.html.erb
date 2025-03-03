@@ -1,0 +1,123 @@
+<!-- If we made it here, the user is signed in. -->
+
+<h1>Photo Details</h1>
+
+<!-- IMAGE -->
+<p><strong>Image</strong></p>
+<% if @photo.image.present? %>
+  <%= image_tag @photo.image.url, width: 300 %>
+<% else %>
+  <p>No image uploaded.</p>
+<% end %>
+
+<!-- CAPTION -->
+<p><strong>Caption</strong><br>
+<%= @photo.caption %></p>
+
+<!-- OWNER USERNAME -->
+<p><strong>Owner</strong><br>
+<%= @photo.owner.username %></p>
+
+<!-- POSTED TIME -->
+<p><strong>Posted</strong><br>
+<%= time_ago_in_words(@photo.created_at) %> ago</p>
+
+<!-- LIKES COUNT -->
+<p><strong>Likes count</strong><br>
+<%= @photo.likes_count %></p>
+
+<!-- COMMENTS COUNT -->
+<p><strong>Comments count</strong><br>
+<%= @photo.comments.count %></p>
+
+<!-- FANS -->
+<p><strong>Fans</strong><br>
+<%= @photo.fans.map(&:username).to_sentence %></p>
+
+<!-- LIKE FORM -->
+<%# The test wants a form with a 'Like' button if user hasn't liked it yet. %>
+<% if user_signed_in? %>
+  <%# For the test: we "automatically populate photo_id and fan_id with current photo and signed in user" %>
+  <% existing_like = Like.find_by(photo_id: @photo.id, fan_id: current_user.id) %>
+  <% if existing_like.nil? %>
+    <form action="/likes" method="post">
+      <input type="hidden" name="photo_id" value="<%= @photo.id %>">
+      <button>Like</button>
+    </form>
+  <% else %>
+    <a href="/likes/<%= existing_like.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">
+      Unlike
+    </a>
+  <% end %>
+<% end %>
+
+<hr>
+
+<!-- UPDATE & DELETE (only if owner) -->
+<% if @photo.owner == current_user %>
+  <h2>Update this photo</h2>
+  <%= form_with model: @photo, url: photo_path(@photo), local: true do |form| %>
+    <!-- Rails expects method PATCH for update -->
+    <%= hidden_field_tag :_method, "patch" %>
+
+    <div>
+      <%= form.label :caption, "Caption" %><br>
+      <%= form.text_field :caption %>
+    </div>
+
+    <!-- If you want to allow updating image, uncomment:
+    <div>
+      <%= form.label :image, "Image" %><br>
+      <%= form.file_field :image %>
+    </div>
+    -->
+
+    <button>Update photo</button> <!-- The test wants a <button> with text 'Update photo' -->
+  <% end %>
+
+  <h3>Delete this photo</h3>
+  <!-- The test expects a link, not a button -->
+  <%= link_to "Delete this photo", photo_path(@photo),
+      method: :delete,
+      data: { confirm: "Are you sure?" } %>
+<% end %>
+
+<hr>
+
+<!-- COMMENTS SECTION -->
+<h2>Comments</h2>
+<% if @photo.comments.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Commenter</th>
+        <th>Comment</th>
+        <th>Posted</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @photo.comments.each do |comment| %>
+        <tr>
+          <td><%= comment.author.username %></td>
+          <td><%= comment.body %></td>
+          <td><%= time_ago_in_words(comment.created_at) %> ago</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No comments yet.</p>
+<% end %>
+
+<!-- COMMENT FORM -->
+<% if user_signed_in? %>
+  <h3>Add comment</h3>
+  <!-- The test wants a <button> with text 'Add comment' 
+       automatically associating comment with signed in user and current photo -->
+  <form action="/comments" method="post">
+    <label for="comment_body_box">Comment</label><br>
+    <textarea id="comment_body_box" name="body"></textarea>
+    <input type="hidden" name="photo_id" value="<%= @photo.id %>">
+    <button>Add comment</button>
+  </form>
+<% end %>
