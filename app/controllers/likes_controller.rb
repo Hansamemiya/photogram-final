@@ -20,4 +20,6 @@ class LikesController < ApplicationController
       redirect_to root_path, alert: "Unable to unlike."
     end
   end
+
+end
   

@@ -4,21 +4,24 @@
 
 <hr>
 
-<% if user_signed_in? %>  <!-- Only show the form if the user is signed in -->
+<% if user_signed_in? %>  
   <div>
     <h2>Add Photo</h2>
 
-    <form action="/insert_photo" method="post" enctype="multipart/form-data">
-      <label for="caption_box">Caption</label>
-      <textarea id="caption_box" name="query_caption" rows="3"></textarea>
+    <!-- Use Rails helpers rather than a bare <form> tag for best practice -->
+    <%= form_with model: Photo.new, url: photos_path, local: true, multipart: true do |form| %>
+      <div>
+        <%= form.label :caption, "Caption" %><br>
+        <%= form.text_area :caption, rows: 3 %>
+      </div>
 
-      <label for="image_box">Image</label>
-      <input type="file" id="image_box" name="query_image">
+      <div>
+        <%= form.label :image, "Upload Image" %><br>
+        <%= form.file_field :image %>  <!-- For CarrierWave file upload -->
+      </div>
 
-      <input type="hidden" value="<%= current_user.id %>" name="query_owner_id">
-
-      <button>Add photo</button>
-    </form>
+      <%= form.submit "Add photo" %>
+    <% end %>
   </div>
 <% end %>
 
@@ -36,15 +39,18 @@
     </tr>
 
     <% @list_of_photos.each do |photo| %>
-      <% unless photo.owner.private? %>  <!-- Only show public photos -->
+      <!-- Only show public photos -->
+      <% unless photo.owner.private? %>
         <tr>
           <td>
-            <% if photo.image.attached? %>
-              <%= image_tag photo.image, width: "100" %>
+            <% if photo.image.present? %>
+              <!-- CarrierWave: access the file via `photo.image.url` -->
+              <%= image_tag photo.image.url, width: 100 %>
             <% else %>
               <p>No image</p>
             <% end %>
           </td>
+
           <td><%= photo.caption %></td>
           <td><%= photo.owner.username %></td>
           <td><%= time_ago_in_words(photo.created_at) %> ago</td>
