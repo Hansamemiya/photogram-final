@@ -1,16 +1,15 @@
 class UsersController < ApplicationController
-  def index
-    matching_users = User.all
+  skip_before_action :authenticate_user!, only: [:index, :show]
 
-    @list_of_users = matching_users.order({ :username => :asc})
+  def index
+    @list_of_users = User.order(username: :asc)
     render "users/index"
   end
 
   def show
-    the_username = params[:id]  # ✅ Change from "path_id" to "id"
-    
+    the_username = params[:id]
     @the_user = User.find_by(username: the_username)
-    
+
     if @the_user.nil?
       redirect_to users_path, alert: "User not found."
     else
@@ -18,4 +17,4 @@ class UsersController < ApplicationController
       render "users/show"
     end
   end
-end  
+end

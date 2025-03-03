@@ -22,11 +22,12 @@ class PhotosController < ApplicationController
   def create
     @photo = current_user.photos.build(photo_params)
     if @photo.save
-      redirect_to photos_path, notice: "Photo added successfully."
+      redirect_to root_path, notice: "Photo added successfully."
     else
-      render :new
+      render :new, alert: "Photo failed to save."
     end
   end
+  
 
   private
 

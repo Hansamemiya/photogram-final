@@ -17,13 +17,24 @@
 
     <% if user_signed_in? %>
       <li><%= link_to current_user.username, edit_user_registration_path, class: "font-bold hover:underline" %></li>
-      <li><%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "hover:underline" %></li>
+      <li>
+        <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
+            data: { confirm: "Are you sure?" }, class: "hover:underline" %>
+      </li>
     <% else %>
       <li><%= link_to "Sign in", new_user_session_path, class: "hover:underline" %></li>
       <li><%= link_to "Sign up", new_user_registration_path, class: "hover:underline" %></li>
     <% end %>
   </ul>
 </nav>
+
+<% flash.each do |key, message| %>
+  <% if message.present? %>
+    <div class="<%= key %>">
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
 
   <div class="container mx-auto mt-4">
     <%= yield %>  <!-- This ensures the content from `users/index.html.erb` appears -->
