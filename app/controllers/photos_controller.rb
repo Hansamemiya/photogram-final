@@ -8,7 +8,6 @@ class PhotosController < ApplicationController
   end
 
   def index
-    puts "DEBUG: Is user signed in? => #{user_signed_in?}"
     matching_photos = Photo.all
 
     @list_of_photos = matching_photos.order({ :created_at => :desc })
@@ -23,12 +22,12 @@ class PhotosController < ApplicationController
   def create
     @photo = current_user.photos.build(photo_params)
     if @photo.save
-      redirect_to root_path, notice: "Photo added successfully."
+      redirect_to root_path, notice: "Photo created successfully."
     else
-      render :new, alert: "Photo failed to save."
+      redirect_to photos_path, alert: "Photo failed to save."
     end
   end
-
+  
   def show
     unless user_signed_in?
       # Test expects a redirect to sign in if user not logged in

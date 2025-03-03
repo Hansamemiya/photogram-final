@@ -6,38 +6,33 @@
   <%= csp_meta_tag %>
   <%= stylesheet_link_tag "application", media: "all" %>
   <%= javascript_include_tag "application", "data-turbolinks-track": "reload" %>
-  <%= javascript_pack_tag "application" if defined?(webpacker) %>
-
 </head>
 <body>
-<nav class="bg-gray-800 p-4 text-white">
-  <ul class="flex space-x-4">
-    <li><%= link_to "All users", users_path, class: "hover:underline" %></li>
-    <li><%= link_to "All public photos", photos_path, class: "hover:underline" %></li>
 
+<!-- FLASH MESSAGES -->
+<% flash.each do |key, message| %>
+  <% if message.present? %>
+    <div class="<%= key %>"><%= message %></div>
+  <% end %>
+<% end %>
+
+<!-- NAV LINKS (tests expect these on the home page) -->
+<nav>
+  <ul>
+    <li><%= link_to "All users", users_path %></li>
+    <li><%= link_to "All public photos", photos_path %></li>
     <% if user_signed_in? %>
-      <li><%= link_to current_user.username, edit_user_registration_path, class: "font-bold hover:underline" %></li>
-      <li>
-        <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
-            data: { confirm: "Are you sure?" }, class: "hover:underline" %>
-      </li>
+      <li><%= link_to "Sign out", "/users/sign_out" %></li>
     <% else %>
-      <li><%= link_to "Sign in", new_user_session_path, class: "hover:underline" %></li>
-      <li><%= link_to "Sign up", new_user_registration_path, class: "hover:underline" %></li>
+      <li><%= link_to "Sign in", "/users/sign_in" %></li>
+      <li><%= link_to "Sign up", "/users/sign_up" %></li>
     <% end %>
   </ul>
 </nav>
 
-<% flash.each do |key, message| %>
-  <% if message.present? %>
-    <div class="<%= key %>">
-      <%= message %>
-    </div>
-  <% end %>
-<% end %>
+<div class="container">
+  <%= yield %>
+</div>
 
-  <div class="container mx-auto mt-4">
-    <%= yield %>  <!-- This ensures the content from `users/index.html.erb` appears -->
-  </div>
 </body>
 </html>
