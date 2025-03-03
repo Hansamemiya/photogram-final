@@ -16,17 +16,14 @@
     <li><%= link_to "All public photos", photos_path, class: "hover:underline" %></li>
 
     <% if user_signed_in? %>
-      <li><a href="/edit_user_profile"><%= current_user.username %></a></li>
-      <li><a href="/user_sign_out">Sign out</a></li>
+      <li><%= link_to current_user.username, edit_user_registration_path, class: "font-bold hover:underline" %></li>
+      <li><%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "hover:underline" %></li>
     <% else %>
-      <li><%= link_to "Sign in", "/user_sign_in", class: "hover:underline" %></li>
-      <li><%= link_to "Sign up", "/user_sign_up", class: "hover:underline" %></li>
+      <li><%= link_to "Sign in", new_user_session_path, class: "hover:underline" %></li>
+      <li><%= link_to "Sign up", new_user_registration_path, class: "hover:underline" %></li>
     <% end %>
   </ul>
 </nav>
-
-
-
 
   <div class="container mx-auto mt-4">
     <%= yield %>  <!-- This ensures the content from `users/index.html.erb` appears -->

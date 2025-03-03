@@ -8,7 +8,11 @@ class PhotosController < ApplicationController
   end
 
   def index
-    @photos = Photo.all.order(created_at: :desc)
+    matching_photos = Photo.all
+
+    @list_of_photos = matching_photos.order({ :created_at => :desc })
+
+    render "photos/index"
   end
 
   def new

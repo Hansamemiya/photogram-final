@@ -1,17 +1,23 @@
-<h2>Sign In</h2>
+<h1>Sign in</h1>
 
-<%= form_tag(user_verify_credentials_path, method: "post") do %>
+<form action="/user_verify_credentials" method="post">
   <div>
-    <%= label_tag :email %><br>
-    <%= text_field_tag :email %>
+    <label for="email_box">Email</label>
+    <input id="email_box" name="query_email" placeholder="Enter your email..." type="text">
   </div>
 
   <div>
-    <%= label_tag :password %><br>
-    <%= password_field_tag :password %>
+    <label for="password_box">Password</label>
+    <input id="password_box" name="query_password" placeholder="Enter your password..." type="password">
   </div>
 
-  <%= submit_tag "Sign In" %>
-<% end %>
+  <button>
+    Sign in
+  </button>
+</form>
 
-<%= link_to "Don't have an account? Sign up", user_sign_up_path %>
+<hr>
+
+<p>
+  Or, <a href="/users/sign_up">Sign up</a> instead.
+</p>

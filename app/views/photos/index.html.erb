@@ -1,12 +1,61 @@
-<h1>All Photos</h1>
+<div>
+  <h1>List of Photos</h1>
+</div>
 
-<% @photos.each do |photo| %>
+<hr>
+
+<% if user_signed_in? %>  <!-- Only show the form if the user is signed in -->
   <div>
-    <h2><%= photo.caption %></h2>
-    <% if photo.image.attached? %>
-      <%= image_tag photo.image, style: "max-width: 300px; height: auto;" %>
-    <% end %>
-    <p>Likes: <%= photo.likes_count %> | Comments: <%= photo.comments_count %></p>
+    <h2>Add Photo</h2>
+
+    <form action="/insert_photo" method="post" enctype="multipart/form-data">
+      <label for="caption_box">Caption</label>
+      <textarea id="caption_box" name="query_caption" rows="3"></textarea>
+
+      <label for="image_box">Image</label>
+      <input type="file" id="image_box" name="query_image">
+
+      <input type="hidden" value="<%= current_user.id %>" name="query_owner_id">
+
+      <button>Add photo</button>
+    </form>
   </div>
-  <hr>
 <% end %>
+
+<hr>
+
+<div>
+  <table border="1">
+    <tr>
+      <th>Image</th>
+      <th>Caption</th>
+      <th>Owner</th>
+      <th>Posted</th>
+      <th>Likes</th>
+      <th></th> <!-- Show details button -->
+    </tr>
+
+    <% @list_of_photos.each do |photo| %>
+      <% unless photo.owner.private? %>  <!-- Only show public photos -->
+        <tr>
+          <td>
+            <% if photo.image.attached? %>
+              <%= image_tag photo.image, width: "100" %>
+            <% else %>
+              <p>No image</p>
+            <% end %>
+          </td>
+          <td><%= photo.caption %></td>
+          <td><%= photo.owner.username %></td>
+          <td><%= time_ago_in_words(photo.created_at) %> ago</td>
+          <td><%= photo.likes_count %></td>
+          <td>
+            <a href="/photos/<%= photo.id %>">Show details</a>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+</div>
+
+<hr>

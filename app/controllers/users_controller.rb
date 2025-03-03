@@ -7,14 +7,15 @@ class UsersController < ApplicationController
   end
 
   def show
-    the_username = params.fetch("path_id")
-  
-    @the_user = User.where({ :username => the_username}).at(0)
-  
-    user_photos = @the_user.photos
-  
-    @list_of_photos = user_photos.order({ :created_at => :desc })
-
-    render "users/show"
+    the_username = params[:id]  # ✅ Change from "path_id" to "id"
+    
+    @the_user = User.find_by(username: the_username)
+    
+    if @the_user.nil?
+      redirect_to users_path, alert: "User not found."
+    else
+      @list_of_photos = @the_user.photos.order(created_at: :desc)
+      render "users/show"
+    end
   end
-end
+end  
